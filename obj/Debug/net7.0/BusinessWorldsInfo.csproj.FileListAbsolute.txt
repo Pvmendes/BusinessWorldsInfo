@@ -1,0 +1,12 @@
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\bin\Debug\net7.0\BusinessWorldsInfo.deps.json
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\bin\Debug\net7.0\BusinessWorldsInfo.dll
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\bin\Debug\net7.0\BusinessWorldsInfo.pdb
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.csproj.AssemblyReference.cache
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.AssemblyInfoInputs.cache
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.AssemblyInfo.cs
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.csproj.CoreCompileInputs.cache
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.dll
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\refint\BusinessWorldsInfo.dll
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\BusinessWorldsInfo.pdb
+C:\Users\paulo\Source\Repos\BusinessWorldsInfo\obj\Debug\net7.0\ref\BusinessWorldsInfo.dll
