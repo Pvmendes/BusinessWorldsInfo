@@ -1,9 +1,4 @@
 ﻿using CsvHelper.Configuration.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessWorldsInfo.Model
 {
@@ -17,14 +12,15 @@ namespace BusinessWorldsInfo.Model
             knight = new Knight();
             paladin = new Paladin();
         }
+
         [Index(0)]
-        public string NameWorld { get; set; }
+        public DateTime RegisterDate { get; set; }
 
         [Index(1)]
-        public int TotalQtPlayer { get; set; }
+        public string NameWorld { get; set; }
 
         [Index(2)]
-        public DateTime RegisterDate { get; set; }
+        public int TotalQtPlayer { get; set; }        
 
         [Index(3)]
         public Rangelvl rangelvl { get; set; }
@@ -45,41 +41,44 @@ namespace BusinessWorldsInfo.Model
         {
             public Druid()
             {
-                rangelvl = new Rangelvl();
+                Rangelvl = new Rangelvl();
             }
 
             public int DruidQt { get; set; }
-            public Rangelvl rangelvl { get; set; }
+            
+            public Rangelvl Rangelvl { get; set; }
         }
 
         public class Sorcecer
         {
             public Sorcecer()
             {
-                rangelvl = new Rangelvl();
+                Rangelvl = new Rangelvl();
             }
+
             public int SorcecerQt { get; set; }
-            public Rangelvl rangelvl { get; set; }
+            public Rangelvl Rangelvl { get; set; }
         }
 
         public class Knight
         {
             public Knight()
             {
-                rangelvl = new Rangelvl();
+                Rangelvl = new Rangelvl();
             }
+
             public int KnightQt { get; set; }
-            public Rangelvl rangelvl { get; set; }
+            public Rangelvl Rangelvl { get; set; }
         }
 
         public class Paladin
         {
             public Paladin()
             {
-                rangelvl = new Rangelvl();
+                Rangelvl = new Rangelvl();
             }
             public int PaladinQt { get; set; }
-            public Rangelvl rangelvl { get; set; }
+            public Rangelvl Rangelvl { get; set; }
         }
     }
 }

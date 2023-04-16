@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BusinessWorldsInfo.Model
 {
     public class WorldModel
     {
+        public class Root
+        {
+            public Information information { get; set; }
+            public Worlds worlds { get; set; }
+        }
+
         // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
         public class Information
         {
@@ -20,12 +21,6 @@ namespace BusinessWorldsInfo.Model
             public int level { get; set; }
             public string name { get; set; }
             public string vocation { get; set; }
-        }
-
-        public class Root
-        {
-            public Information information { get; set; }
-            public Worlds worlds { get; set; }
         }
 
         public class World
@@ -52,7 +47,5 @@ namespace BusinessWorldsInfo.Model
         {
             public World world { get; set; }
         }
-
-
     }
 }

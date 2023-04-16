@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using Flurl;
+﻿
 using Flurl.Http;
 using BusinessWorldsInfo.Model;
 using static BusinessWorldsInfo.Model.WorldModel;
 using BusinessWorldsInfo.Model.Enum;
-using System.Numerics;
-using System.Formats.Asn1;
-using System.Globalization;
-using CsvHelper.Configuration;
-using CsvHelper;
+using BusinessWorldsInfo.Utils;
+using BusinessWorldsInfo.Business.HTTPs_Requests;
 
 namespace BusinessWorldsInfo
 {
@@ -29,44 +20,55 @@ namespace BusinessWorldsInfo
 
         public List<ResumeWorld> ResumeWorldList { get; set; }
 
-        public Process(string url_tibiadata_domain, string url_tibiadata_path_worlds, string url_tibiadata_path_world_name) 
+        public string FilePath { get; set; }
+
+        public WorldsRequest WorldsRequest { get; set; }
+
+        public Process() 
         {
-            URL_tibiadata_Domain = url_tibiadata_domain;
-            URL_tibiadata_path_worlds = url_tibiadata_path_worlds;
-            URL_tibiadata_path_world_name = url_tibiadata_path_world_name;
+            ResumeWorldList = new List<ResumeWorld>();
 
-            WorldModelList = new List<WorldModel.Root>();
-            
-
-            this.GetWorldsFromTibiaData();
-            this.GetEachWorldInfo();
+            WorldsRequest = new WorldsRequest();
         }
 
         public void ActionStart()
         {
-            Console.WriteLine("Hello, Process List " + WorldModelList.Count);
+            WorldsModelList = WorldsRequest.GetWorldsFromTibiaData(URL_tibiadata_Domain + URL_tibiadata_path_worlds);
 
             do
             {
-                this.processingEachWorld();
-
-                foreach (var item in ResumeWorldList)
+                try
                 {
-                    Console.WriteLine($"{item.NameWorld} RegisterDate:{item.RegisterDate}");
+                    WorldModelList = WorldsRequest.GetEachWorldInfo(URL_tibiadata_Domain + URL_tibiadata_path_world_name, WorldsModelList.worlds.regular_worlds);
+                    
+                    Console.WriteLine("Hello, Process List " + WorldModelList.Count);
+
+                    this.processingEachWorld();
+
+                    foreach (var item in ResumeWorldList)
+                    {
+                        Console.WriteLine($"{item.NameWorld} RegisterDate:{item.RegisterDate}");
+                    }
+
+                    Console.WriteLine($"{ResumeWorldList.Count} RegisterDate:{DateTime.Now}");
+
+                    Thread.Sleep(10000);
+
+                    //Console.WriteLine("1 hour ");
+                    //Thread.Sleep(3600000);
+
+                    //Console.WriteLine("30 min ");
+                    //Thread.Sleep(1800000);
                 }
-
-                Console.WriteLine("1 hour ");
-                Thread.Sleep(3600000);
-
-                this.GetWorldsFromTibiaData();
-                this.GetEachWorldInfo();
+                catch (Exception)
+                {
+                }
+                
             } while (true);
         }
 
         private void processingEachWorld()
         {
-            ResumeWorldList = new List<ResumeWorld>();
-
             foreach (var item in WorldModelList)
             {
                 var ResumeWorld = new ResumeWorld();
@@ -119,50 +121,38 @@ namespace BusinessWorldsInfo
                             break;
                     }
 
-                    var vocation = this.vocation(player);
-
-                    switch (vocation)
+                    if (player.vocation.Contains("Druid"))
                     {
-                        case VocationEnum.None:
-                            break;
-                        case VocationEnum.Druid:
-                            ResumeWorld.druid.DruidQt += 1;
-                            ResumeWorld.druid.rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.rangelvl);
-                            break;
-                        case VocationEnum.Knight:
-                            ResumeWorld.knight.KnightQt += 1;
-                            ResumeWorld.knight.rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.rangelvl);
-                            break;
-                        case VocationEnum.Paladin:
-                            ResumeWorld.paladin.PaladinQt += 1;
-                            ResumeWorld.paladin.rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.rangelvl);
-                            break;
-                        case VocationEnum.Sorcerer:
-                            ResumeWorld.sorcecer.SorcecerQt += 1;
-                            ResumeWorld.sorcecer.rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.rangelvl);
-                            break;
-                        default:
-                            break;
+                        ResumeWorld.druid.DruidQt += 1;
+                        ResumeWorld.druid.Rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.Rangelvl);
+                    }
+                    else if (player.vocation.Contains("Knight"))
+                    {
+                        ResumeWorld.knight.KnightQt += 1;
+                        ResumeWorld.knight.Rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.Rangelvl);
+                    }
+                    else if (player.vocation.Contains("Paladin"))
+                    {
+                        ResumeWorld.paladin.PaladinQt += 1;
+                        ResumeWorld.paladin.Rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.Rangelvl);
+                    }
+                    else if (player.vocation.Contains("Sorcerer"))
+                    {
+                        ResumeWorld.sorcecer.SorcecerQt += 1;
+                        ResumeWorld.sorcecer.Rangelvl = this.rangelvlEnumVocation(range, ResumeWorld.druid.Rangelvl);
                     }
                 }
 
                 ResumeWorldList.Add(ResumeWorld);
             }
 
-            this.WriteCSVLocal();
-        }
+            JsonFileUtils.JsonWriteLocal(
+                $"{FilePath}fileWorlds_{DateTime.Now.ToString("dd-MM-yyyy")}_.json", 
+                ResumeWorldList.Distinct());
 
-        private void WriteCSVLocal()
-        {
-            var configPersons = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true
-            };
-            using (var writer = new StreamWriter("C:\\dados\\fileWorlds.csv"))
-            using (var csv = new CsvWriter(writer, configPersons))
-            {
-                csv.WriteRecords(ResumeWorldList);
-            }
+            CSVFileUtils.CSVWriteLocal(
+                filePath: $"{FilePath}fileWorlds_{DateTime.Now.ToString("dd-MM-yyyy")}_.csv",
+                ResumeWorldList.Distinct());
         }
 
         private Rangelvl rangelvlEnumVocation(RangelvlEnum range, Rangelvl rangelvl)
@@ -207,29 +197,7 @@ namespace BusinessWorldsInfo
 
             return rangelvl;
         }
-
-        private VocationEnum vocation(OnlinePlayer player)
-        {
-            if (player.vocation.Contains("Druid"))
-            {
-                return VocationEnum.Druid;
-            }
-            else if (player.vocation.Contains("Knight"))
-            {
-                return VocationEnum.Knight;
-            }
-            else if (player.vocation.Contains("Paladin"))
-            {
-                return VocationEnum.Paladin;
-            }
-            else if (player.vocation.Contains("Sorcerer"))
-            {
-                return VocationEnum.Sorcerer;
-            }
-
-            return VocationEnum.None;
-        }
-
+              
         private RangelvlEnum rangelvlEnum(OnlinePlayer player)
         {
             if (player.level >= 8 && player.level <= 50)
@@ -274,27 +242,6 @@ namespace BusinessWorldsInfo
             }
 
             return RangelvlEnum.None;
-        }
-
-        private void GetWorldsFromTibiaData()
-        {
-            var url = URL_tibiadata_Domain + URL_tibiadata_path_worlds;
-            var result = url
-                .GetJsonAsync<WorldsListModel.Root>().Result;
-
-            WorldsModelList = result;
-        }
-
-        private void GetEachWorldInfo()
-        {
-            foreach (var world in WorldsModelList.worlds.regular_worlds)
-            {
-                var url = URL_tibiadata_Domain + URL_tibiadata_path_world_name + world.name;
-
-                var result = url.GetJsonAsync<WorldModel.Root>().Result;
-
-                WorldModelList.Add(result);
-            } 
         }
     }
 }

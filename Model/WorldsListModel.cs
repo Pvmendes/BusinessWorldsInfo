@@ -8,6 +8,12 @@ namespace BusinessWorldsInfo.Model
 {
     public  class WorldsListModel
     {
+        public class Root
+        {
+            public Information information { get; set; }
+            public Worlds worlds { get; set; }
+        }
+
         // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
         public class Information
         {
@@ -28,12 +34,6 @@ namespace BusinessWorldsInfo.Model
             public string status { get; set; }
             public string tournament_world_type { get; set; }
             public string transfer_type { get; set; }
-        }
-
-        public class Root
-        {
-            public Information information { get; set; }
-            public Worlds worlds { get; set; }
         }
 
         public class TournamentWorld
